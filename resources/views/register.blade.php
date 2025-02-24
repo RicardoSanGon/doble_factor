@@ -139,5 +139,12 @@
                 loader.style.display = 'none';
             }, 4500);
         });
+        function reloadCaptcha(event) {
+            event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+            const captchaImage = document.getElementById('captcha-image');
+
+            // Recarga la imagen agregando un parámetro único
+            captchaImage.src = '{{ captcha_src() }}' + '?' + Math.random();
+        }
     </script>
 @endsection
