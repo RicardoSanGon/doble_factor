@@ -75,7 +75,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => env('DB_SSL_MODE', 'prefer'),
+            'sslmode' => env('DB_SSL_MODE', 'disable'),
         ],
 
         'sqlsrv' => [
