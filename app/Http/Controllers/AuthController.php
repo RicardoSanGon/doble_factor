@@ -269,7 +269,7 @@ class AuthController extends Controller
         $user = User::where('token_to_verify', $token)->first();
         if(!$user){
             throw ValidationException::withMessages([
-                'code' => 'Código incorrecto'
+                'code' => 'Usuario no valido'
             ]);
         }
         if(Hash::check($request->code, $user->code_to_verify)){
@@ -278,6 +278,7 @@ class AuthController extends Controller
                 throw new JWTException('No se pudo crear el token');
             }
             $user->code_to_verify = null;
+            $user->token_to_verify = null;
             $cookie = cookie('jwt', $token, 60*24);
             $user->save();
             return redirect()->route('dashboard')->cookie($cookie);
@@ -342,6 +343,16 @@ class AuthController extends Controller
         return $randomString;
     }
 
+    /**
+     * Verifica el captcha.
+     *
+     * En este metodo se verifica que el captcha ingresado por el usuario sea correcto,
+     * en caso contrario se lanza una excepción de validación.
+     *
+     * @param $captcha
+     * @return void
+     * @throws ValidationException
+     */
     function verfyCaptcha($captcha)
     {
         if(!Captcha::check($captcha)){
