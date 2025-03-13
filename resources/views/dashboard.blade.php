@@ -28,23 +28,9 @@
                     p-2
                     cursor-pointer
                     hover: transition duration-500 ease-in-out hover:bg-red-900"
-                   onclick="clearHistoryAndLogout(event)">Cerrar sesión</a>
+                   href="{{route('logout')}}"
+                >Cerrar sesión</a>
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        function clearHistoryAndLogout(event) {
-            event.preventDefault();
-            history.pushState(null, null, location.href);
-            window.addEventListener('popstate', function () {
-                history.pushState(null, null, location.href);
-            });
-            setTimeout(function () {
-                window.location.href = '{{ route('logout') }}';
-            }, 1000);
-        }
-    </script>
 @endsection
