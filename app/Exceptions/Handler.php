@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
          * ID: DBE01
          * Descripción: Error que devuelve la base de datos al intentar realizar una operación.
          */
-        if($e instanceof QueryException){
+        if ($e instanceof QueryException) {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', 'En este momento no podemos procesar tu solicitud, por favor intenta más tarde.');
         }
@@ -80,7 +80,7 @@ class Handler extends ExceptionHandler
          * ID: RE01
          * Descripción: Redirige al usuario a la página de inicio si la ruta no existe.
          */
-        if($e instanceof NotFoundHttpException){
+        if ($e instanceof NotFoundHttpException) {
             Log::error($e->getMessage());
             return redirect()->route('dashboard');
         }
@@ -89,7 +89,7 @@ class Handler extends ExceptionHandler
          * ID: VWE01
          * Descripción: Redirige al usuario a la página de inicio si hay un error al cargar la vista.
          */
-        if ($e instanceof ViewException){
+        if ($e instanceof ViewException) {
             Log::error($e->getMessage());
             return redirect()->route('home')->with('error', 'Error al cargar la vista.');
         }

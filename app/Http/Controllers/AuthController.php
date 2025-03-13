@@ -49,7 +49,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
  * @see ValidationException Para el manejo de excepciones de validación.
  * @see Log Para el registro de errores.
  */
-
 class AuthController extends Controller
 {
     /**
@@ -58,6 +57,7 @@ class AuthController extends Controller
      * @var WhatsappController
      */
     private $whatsapp_controller;
+
     /**
      * Crea una nueva instancia del controlador.
      *
@@ -67,6 +67,7 @@ class AuthController extends Controller
     {
         $this->whatsapp_controller = new WhatsappController();
     }
+
     /**
      * Muestra la vista de inicio de sesión.
      *
@@ -76,6 +77,7 @@ class AuthController extends Controller
     {
         return view('login', ['captcha' => captcha_img()]);
     }
+
     /**
      * Muestra la vista de registro.
      *
@@ -85,6 +87,7 @@ class AuthController extends Controller
     {
         return view('register', ['captcha' => captcha_img()]);
     }
+
     /**
      * Muestra la vista del dashboard.
      *
@@ -94,6 +97,7 @@ class AuthController extends Controller
     {
         return view('dashboard');
     }
+
     /**
      * Muestra la vista del código de verificación.
      *
@@ -130,31 +134,32 @@ class AuthController extends Controller
         $request->validated();
         $this->verfyCaptcha($request->captcha);
         $user = User::where('email', $request->email)->first();
-        if(!$user){
+        if (!$user) {
             throw ValidationException::withMessages([
                 'user' => 'Usuario no encontrado'
             ]);
         }
-        if(!$user->verified){
+        if (!$user->verified) {
             throw ValidationException::withMessages([
                 'user' => 'Usuario no verificado'
             ]);
         }
-        if(Hash::check($request->password, $user->password)){
+        if (Hash::check($request->password, $user->password)) {
+            $user->token_to_verify = $this->generateRandomString();
             $code = random_int(100000, 999999);
             $user->code_to_verify = Hash::make($code);
             $mail = new CodeEmail($code);
             Mail::to($user->email)->send($mail);
-            $this->whatsapp_controller->sendMessage('Se ha dectectado un inicio de sesión en tu cuenta *'.$user->email.'* con el código de verificación: *'.$code.'*. Si no fuiste tú, por favor ignora este mensaje.');
+            $this->whatsapp_controller->sendMessage('Se ha dectectado un inicio de sesión en tu cuenta *' . $user->email . '* con el código de verificación: *' . $code . '*. Si no fuiste tú, por favor ignora este mensaje.');
             $user->save();
             return redirect()->route('code.view', ['token' => $user->token_to_verify]);
-        }
-        else{
+        } else {
             throw ValidationException::withMessages([
                 'credentials' => 'Credenciales incorrectas'
             ]);
         }
     }
+
     /**
      * Cierra la sesión de un usuario.
      *
@@ -206,7 +211,7 @@ class AuthController extends Controller
             ['token' => $token]
         );
         $mail = new EmailVerification($signed_url, $resend_url);
-        try{
+        try {
             $user = new User();
             $user->email = $request->email;
             $user->phone = $request->phone;
@@ -217,7 +222,7 @@ class AuthController extends Controller
             DB::commit();
             session()->flash('registered', 'Usuario registrado correctamente, verifica tu email');
             return redirect()->route('home');
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e);
             DB::rollBack();
             session()->flash('error', 'Error al registrar el usuario, intenta más tarde');
@@ -237,7 +242,7 @@ class AuthController extends Controller
     function verifyEmail($token)
     {
         $user = User::where('token_to_verify', $token)->first();
-        if($user){
+        if ($user) {
             $user->verified = true;
             $user->save();
             session()->flash('verified', 'Email verificado correctamente');
@@ -267,21 +272,20 @@ class AuthController extends Controller
         $request->validated();
         $this->verfyCaptcha($request->captcha);
         $user = User::where('token_to_verify', $token)->first();
-        if(!$user){
+        if (!$user) {
             return redirect()->route('home')->with('error', 'Acceso no permitido.');
         }
-        if(Hash::check($request->code, $user->code_to_verify)){
+        if (Hash::check($request->code, $user->code_to_verify)) {
 
             if (!$token = JWTAuth::fromUser($user)) {
                 throw new JWTException('No se pudo crear el token');
             }
             $user->code_to_verify = null;
             $user->token_to_verify = null;
-            $cookie = cookie('jwt', $token, 60*24);
+            $cookie = cookie('jwt', $token, 60 * 24);
             $user->save();
             return redirect()->route('dashboard')->cookie($cookie);
-        }
-        else{
+        } else {
             throw ValidationException::withMessages([
                 'code' => 'Código incorrecto'
             ]);
@@ -304,7 +308,7 @@ class AuthController extends Controller
     public function resendVerification($token)
     {
         $user = User::where('token_to_verify', $token)->first();
-        if($user){
+        if ($user) {
             $signed_url = URL::temporarySignedRoute(
                 'verify.email',
                 now()->addMinutes(30),
@@ -331,7 +335,8 @@ class AuthController extends Controller
      * @return string
      * @throws RandomException
      */
-    function generateRandomString($length = 25) {
+    function generateRandomString($length = 25)
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -353,7 +358,7 @@ class AuthController extends Controller
      */
     function verfyCaptcha($captcha)
     {
-        if(!Captcha::check($captcha)){
+        if (!Captcha::check($captcha)) {
             throw ValidationException::withMessages([
                 'captcha' => 'Wrong captcha'
             ]);
