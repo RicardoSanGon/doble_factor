@@ -28,7 +28,6 @@
                     p-2
                     cursor-pointer
                     hover: transition duration-500 ease-in-out hover:bg-red-900"
-                   href="{{route('logout')}}"
                    onclick="clearHistoryAndLogout(event)">Cerrar sesión</a>
             </div>
         </div>
