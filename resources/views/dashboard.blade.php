@@ -15,7 +15,8 @@
             </div>
             <div class="flex justify-center">
                 <p class="text-black">
-                    Bienvenido <p class="font-bold ml-2"> {{Auth::user()->email}}</p>
+                    Bienvenido
+                <p class="font-bold ml-2"> {{Auth::user()->email}}</p>
                 </p>
             </div>
             <div class="flex justify-center">
@@ -27,8 +28,24 @@
                     p-2
                     cursor-pointer
                     hover: transition duration-500 ease-in-out hover:bg-red-900"
-                    href="{{route('logout')}}">Cerrar sesión</a>
+                   href="{{route('logout')}}"
+                   onclick="clearHistoryAndLogout(event)">Cerrar sesión</a>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function clearHistoryAndLogout(event) {
+            event.preventDefault();
+            history.pushState(null, null, location.href);
+            window.addEventListener('popstate', function () {
+                history.pushState(null, null, location.href);
+            });
+            setTimeout(function () {
+                window.location.href = '{{ route('logout') }}';
+            }, 1000);
+        }
+    </script>
 @endsection
