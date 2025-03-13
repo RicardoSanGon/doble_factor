@@ -268,9 +268,7 @@ class AuthController extends Controller
         $this->verfyCaptcha($request->captcha);
         $user = User::where('token_to_verify', $token)->first();
         if(!$user){
-            throw ValidationException::withMessages([
-                'code' => 'Usuario no valido'
-            ]);
+            return redirect()->route('home')->with('error', 'Acceso no permitido.');
         }
         if(Hash::check($request->code, $user->code_to_verify)){
 
