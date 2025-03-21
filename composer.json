@@ -13,6 +13,7 @@
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "mews/captcha": "^3.4",
+        "resend/resend-laravel": "^0.10.0",
         "twilio/sdk": "^8.3",
         "tymon/jwt-auth": "^2.1"
     },
