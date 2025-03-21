@@ -28,7 +28,7 @@ Route::group(['middleware' => 'jwt'], function () {
 });
 //Ruta que verificara el correo del usuario
 Route::get('/email/verify/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email')
-    ->where('token', '^[0-9a-zA-Z_\$%#!&]{25,}$');
+    ->where('token', '^[0-9a-zA-Z_]{25,}$');
 //Ruta que mostrara la vista de verificación de código
 Route::get('/code/{token}', [AuthController::class, 'codeView'])->name('code.view')
     ->where('token', '^[0-9a-zA-Z_\$%#!&]{25,}$');
