@@ -73,6 +73,13 @@ class Handler extends ExceptionHandler
          * Descripción: Devuelve los errores de validación en los formularios.
          */
         if ($e instanceof ValidationException) {
+
+            Log::debug('ValidationException', [
+                'referer' => $request->headers->get('referer'),
+                'current_url' => $request->fullUrl(),
+                'session_id' => session()->getId(),
+                'session_data' => session()->all()
+            ]);
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
         /**

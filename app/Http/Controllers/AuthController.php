@@ -133,7 +133,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $request->validated();
-        $this->verfyCaptcha($request->captcha);
+        $this->verfyCaptcha($request->captcha,'home');
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             throw ValidationException::withMessages([
@@ -200,7 +200,7 @@ class AuthController extends Controller
     {
         DB::beginTransaction();
         $request->validated();
-        $this->verfyCaptcha($request->captcha);
+        $this->verfyCaptcha($request->captcha,'register_view');
         $token = $this->generateRandomString();
         $signed_url = URL::temporarySignedRoute(
             'verify.email',
@@ -273,7 +273,7 @@ class AuthController extends Controller
     public function verifyCode(CodeRequest $request, $token)
     {
         $request->validated();
-        $this->verfyCaptcha($request->captcha);
+        $this->verfyCaptcha($request->captcha,'code.view');
         $user = User::where('token_to_verify', $token)->first();
         if (!$user) {
             return redirect()->route('home')->with('error', 'Acceso no permitido.');
@@ -359,12 +359,10 @@ class AuthController extends Controller
      * @return void
      * @throws ValidationException
      */
-    function verfyCaptcha($captcha)
+    function verfyCaptcha($captcha, $route)
     {
         if (!Captcha::check($captcha)) {
-            throw ValidationException::withMessages([
-                'captcha' => 'Wrong captcha'
-            ]);
+           return redirect()-route($route)->with('error', 'Captcha incorrecto')->withInput();
         }
     }
 
