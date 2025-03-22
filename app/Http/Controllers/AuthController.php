@@ -76,6 +76,7 @@ class AuthController extends Controller
      */
     public function loginView()
     {
+        $request->session()->put('_previous.url', url()->current());
         return view('login', ['captcha' => captcha_img()]);
     }
 
@@ -86,6 +87,7 @@ class AuthController extends Controller
      */
     public function registerView()
     {
+        $request->session()->put('_previous.url', url()->current());
         return view('register', ['captcha' => captcha_img()]);
     }
 
@@ -107,6 +109,7 @@ class AuthController extends Controller
      */
     public function codeView($token)
     {
+        $request->session()->put('_previous.url', url()->current());
         return view('code', ['token' => $token, 'captcha' => captcha_img()]);
     }
 
