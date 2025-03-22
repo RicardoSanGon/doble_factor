@@ -28,13 +28,13 @@ Route::group(['middleware' => 'jwt'], function () {
 });
 //Ruta que verificara el correo del usuario
 Route::get('/email/verify/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email')
-    ->where('token', '^[0-9a-zA-Z_\$%#!&]{25,}$');
+    ->where('token', '^[0-9a-zA-Z_]{25,}$');
 //Ruta que mostrara la vista de verificación de código
 Route::get('/code/{token}', [AuthController::class, 'codeView'])->name('code.view')
-    ->where('token', '^[0-9a-zA-Z_\$%#!&]{25,}$');
+    ->where('token', '^[0-9a-zA-Z_]{25,}$');
 //Ruta que reenviara el correo de verificación
 Route::get('/resend/verification/{token}', [AuthController::class, 'resendVerification'])->name('resend.verification')
-    ->where('token', '^[0-9a-zA-Z_\$%#!&]{25,}$');
+    ->where('token', '^[0-9a-zA-Z_]{25,}$');
 
 //Ruta que hara el inicio de sesión
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -42,8 +42,5 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 //Ruta que enviara el código de verificación
 Route::post('/code/verify/{token}', [AuthController::class, 'verifyCode'])->name('verify.code')
-->where('token', '^[0-9a-zA-Z_\$%#!&]{25,}$');
-
-
-
+->where('token', '^[0-9a-zA-Z_]{25,}$');
 

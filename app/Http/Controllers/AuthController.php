@@ -25,6 +25,7 @@ use Mews\Captcha\Facades\Captcha;
 use Random\RandomException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Resend\Laravel\Facades\Resend;
 
 /**
  * Class AuthController
@@ -149,7 +150,7 @@ class AuthController extends Controller
             $code = random_int(100000, 999999);
             $user->code_to_verify = Hash::make($code);
             $mail = new CodeEmail($code);
-            Mail::to($user->email)->send($mail);
+            Resend::emails()->send(['from' => 'noreply@ricardosg.icu', 'to' => $user->email, 'html' => $mail->render(), 'subject' => 'Verificación de correo']);
             $this->whatsapp_controller->sendMessage('Se ha dectectado un inicio de sesión en tu cuenta *' . $user->email . '* con el código de verificación: *' . $code . '*. Si no fuiste tú, por favor ignora este mensaje.');
             $user->save();
             return redirect()->route('code.view', ['token' => $user->token_to_verify]);
@@ -217,7 +218,7 @@ class AuthController extends Controller
             $user->phone = $request->phone;
             $user->password = Hash::make($request->password);
             $user->token_to_verify = $token;
-            Mail::to($user->email)->send($mail);
+            Resend::emails()->send(['from' => 'noreply@ricardosg.icu', 'to' => $user->email, 'html' => $mail->render(), 'subject' => 'Verificación de correo']);
             $user->save();
             DB::commit();
             session()->flash('registered', 'Usuario registrado correctamente, verifica tu email');
@@ -319,7 +320,7 @@ class AuthController extends Controller
                 ['token' => $token]
             );
             $mail = new EmailVerification($signed_url, $resend_url);
-            Mail::to($user->email)->send($mail);
+            Resend::emails()->send(['from' => 'noreply@ricardosg.icu', 'to' => $user->email, 'html' => $mail->render(), 'subject' => 'Verificación de correo']);
             session()->flash('resent', 'Email reenviado correctamente');
             return redirect()->route('home');
         }
@@ -337,7 +338,7 @@ class AuthController extends Controller
      */
     function generateRandomString($length = 25)
     {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
