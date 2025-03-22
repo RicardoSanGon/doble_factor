@@ -232,6 +232,8 @@ class AuthController extends Controller
     }
 
     /**
+
+
      * Verificación de email.
      *
      * Este metodo se encarga de verificar el email del usuario, si el token es correcto se cambia el estado de verificación
