@@ -73,6 +73,7 @@ class Handler extends ExceptionHandler
          * Descripción: Devuelve los errores de validación en los formularios.
          */
         if ($e instanceof ValidationException) {
+            Log::error('URL anterior detectada por Laravel: ' . url()->previous());
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
         /**
