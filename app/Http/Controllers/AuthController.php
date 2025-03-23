@@ -234,8 +234,6 @@ class AuthController extends Controller
     }
 
     /**
-
-
      * Verificación de email.
      *
      * Este metodo se encarga de verificar el email del usuario, si el token es correcto se cambia el estado de verificación
@@ -278,8 +276,11 @@ class AuthController extends Controller
             'code' => 'required|numeric|digits:6',
             'captcha' => 'required'
         ]);
-        if($validated->fails()){
-            return redirect()->route('code.view', ['token' => $token])->withErrors($validated->errors())->withInput();
+
+        if ($validated->fails()) {
+            return redirect()->route('code.view', ['token' => $token])
+                ->withErrors($validated->errors())
+                ->withInput();
         }
         $this->verfyCaptchaCode($request->captcha, 'code.view');
         $user = User::where('token_to_verify', $token)->first();
