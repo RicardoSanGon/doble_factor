@@ -32,7 +32,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => 'required|email|max:30|regex:/^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$/',
             'password' => 'required|min:8',
-            'captcha' => 'required'
+            'g-recaptcha-response' => 'required|captcha',
         ];
     }
 }

@@ -56,25 +56,7 @@
                            class="w-60 h-10 mt-5 rounded-md p-3">
                 </div>
                 <div class="w-max ml-auto mr-auto mt-5">
-                    <div class="flex">
-                        <img src="{!! captcha_src() !!}"
-                             alt="Captcha Image"
-                             class="w-max h-14 mr-5 rounded-md"
-                             id="captcha-image">
-                        <a class="w-1/2 h-1/2 mt-auto mb-auto flex justify-center"
-                           onclick="reloadCaptcha(event)">
-                            <img src="{{asset('img/reload-icon.svg')}}"
-                                 alt="Reload Captcha"
-                                 class="w-max h-max">
-                        </a>
-                    </div>
-                    <div>
-                        <input type="text"
-                               name="captcha"
-                               placeholder="Enter Captcha"
-                               class="w-60 h-10 mt-5 rounded-md p-3"
-                               required>
-                    </div>
+                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
                 </div>
                 <div class="flex justify-center">
                     <button type="submit" class="w-60 h-10 mt-5
@@ -95,6 +77,7 @@
             </form>
         </div>
     </div>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
 @endsection
@@ -139,12 +122,5 @@
                 loader.style.display = 'none';
             }, 4500);
         });
-        function reloadCaptcha(event) {
-            event.preventDefault(); // Evita el comportamiento predeterminado del enlace
-            const captchaImage = document.getElementById('captcha-image');
-
-            // Recarga la imagen agregando un parámetro único
-            captchaImage.src = '{{ captcha_src() }}' + '?' + Math.random();
-        }
     </script>
 @endsection

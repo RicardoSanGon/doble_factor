@@ -35,7 +35,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|email|unique:users|max:30|regex:/^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$/',
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
             'phone' => 'required|numeric|digits_between:10,10|unique:users',
-            'captcha' => 'required'
+            'g-recaptcha-response' => 'required|captcha',
         ];
     }
 }
