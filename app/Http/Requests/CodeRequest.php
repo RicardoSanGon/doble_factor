@@ -32,7 +32,7 @@ class CodeRequest extends FormRequest
          */
         return [
             'code' => 'required|numeric|digits:6',
-            'g-recaptcha-response' => 'required|captcha',
+            'g-recaptcha-response' => 'required',
         ];
     }
 }
