@@ -72,10 +72,10 @@ class Handler extends ExceptionHandler
          * ID: VE01
          * Descripción: Devuelve los errores de validación en los formularios.
          */
-        if ($e instanceof ValidationException) {
-            Log::error('URL anterior detectada por Laravel: ' . url()->previous());
-            return back()->withErrors($e->errors())->withInput();
-        }
+//        if ($e instanceof ValidationException) {
+//            Log::error('URL anterior detectada por Laravel: ' . url()->previous());
+//            return back()->withErrors($e->errors())->withInput();
+//        }
         /**
          * Categoría: Errores de rutas
          * ID: RE01
@@ -90,10 +90,10 @@ class Handler extends ExceptionHandler
          * ID: VWE01
          * Descripción: Redirige al usuario a la página de inicio si hay un error al cargar la vista.
          */
-//        if ($e instanceof ViewException) {
-//            Log::error($e->getMessage());
-//            return redirect()->route('home')->with('error', 'Error al cargar la vista.');
-//        }
+        if ($e instanceof ViewException) {
+            Log::error($e->getMessage());
+            return redirect()->route('home')->with('error', 'Error al cargar la vista.');
+        }
         /**
          * Categoría: Errores de autenticación
          * ID: AE01
