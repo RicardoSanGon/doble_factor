@@ -25,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (Request::server('HTTP_X_FORWARDED_PROTO', 'http') === 'https') {
+        $request = Request::instance();
+        if ($request->server('HTTP_X_FORWARDED_PROTO', 'http') === 'https') {
             URL::forceScheme('https');
         }
     }
