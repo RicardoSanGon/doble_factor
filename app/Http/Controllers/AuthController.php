@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Mews\Captcha\Facades\Captcha;
 use Random\RandomException;
@@ -133,7 +134,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $request->validated();
-        $this->verfyCaptcha($request->captcha);
+        $this->verfyCaptcha($request->captcha, 'home');
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             throw ValidationException::withMessages([
@@ -201,7 +202,7 @@ class AuthController extends Controller
         Log::info('Request Headers: ', request()->headers->all());
         DB::beginTransaction();
         $request->validated();
-        $this->verfyCaptcha($request->captcha);
+        $this->verfyCaptcha($request->captcha, 'register_view');
         $token = $this->generateRandomString();
         $signed_url = URL::temporarySignedRoute(
             'verify.email',
@@ -271,10 +272,16 @@ class AuthController extends Controller
      * @see JWTAuth Para la creación del token (JWT).
      * @see Hash::check() Para compara texto encriptado con texto plano.
      */
-    public function verifyCode(CodeRequest $request, $token)
+    public function verifyCode(Request $request, $token)
     {
-        $request->validated();
-        $this->verfyCaptcha($request->captcha);
+        $validated = Validator::make($request->all(), [
+            'code' => 'required|numeric|digits:6',
+            'captcha' => 'required'
+        ]);
+        if($validated->fails()){
+            return redirect()->route('code.view', ['token' => $token])->withErrors($validated->errors())->withInput();
+        }
+        $this->verfyCaptchaCode($request->captcha, 'code.view');
         $user = User::where('token_to_verify', $token)->first();
         if (!$user) {
             return redirect()->route('home')->with('error', 'Acceso no permitido.');
@@ -357,15 +364,20 @@ class AuthController extends Controller
      * en caso contrario se lanza una excepción de validación.
      *
      * @param $captcha
-     * @return void
+     * @return RedirectResponse
      * @throws ValidationException
      */
-    function verfyCaptcha($captcha)
+    function verfyCaptcha($captcha, $route_name)
     {
         if (!Captcha::check($captcha)) {
-           throw ValidationException::withMessages([
-                'captcha' => 'Captcha incorrecto'
-            ]);
+            return redirect()->route($route_name)->with('error', 'Captcha Invalido')->withInput();
+        }
+    }
+
+    function verfyCaptchaCode($captcha, $token)
+    {
+        if (!Captcha::check($captcha)) {
+            return redirect()->route('code.view', ['token' => $token])->with('error', 'Captcha Invalido')->withInput();
         }
     }
 

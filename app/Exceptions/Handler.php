@@ -90,10 +90,10 @@ class Handler extends ExceptionHandler
          * ID: VWE01
          * Descripción: Redirige al usuario a la página de inicio si hay un error al cargar la vista.
          */
-        if ($e instanceof ViewException) {
-            Log::error($e->getMessage());
-            return redirect()->route('home')->with('error', 'Error al cargar la vista.');
-        }
+//        if ($e instanceof ViewException) {
+//            Log::error($e->getMessage());
+//            return redirect()->route('home')->with('error', 'Error al cargar la vista.');
+//        }
         /**
          * Categoría: Errores de autenticación
          * ID: AE01

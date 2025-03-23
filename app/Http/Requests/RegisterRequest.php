@@ -7,6 +7,7 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
+    protected $redirect = '/register';
     /**
      * Determine if the user is authorized to make this request.
      *
