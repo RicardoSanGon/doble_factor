@@ -72,10 +72,9 @@ class Handler extends ExceptionHandler
          * ID: VE01
          * Descripción: Devuelve los errores de validación en los formularios.
          */
-//        if ($e instanceof ValidationException) {
-//            Log::error('URL anterior detectada por Laravel: ' . url()->previous());
-//            return back()->withErrors($e->errors())->withInput();
-//        }
+        if ($e instanceof ValidationException) {
+            return parent::render($request, $e);
+        }
         /**
          * Categoría: Errores de rutas
          * ID: RE01
