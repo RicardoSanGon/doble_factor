@@ -270,19 +270,10 @@ class AuthController extends Controller
      * @see JWTAuth Para la creación del token (JWT).
      * @see Hash::check() Para compara texto encriptado con texto plano.
      */
-    public function verifyCode(Request $request, $token)
+    public function verifyCode(CodeRequest $request, $token)
     {
-        $validated = Validator::make($request->all(), [
-            'code' => 'required|numeric|digits:6',
-            'captcha' => 'required'
-        ]);
-
-        if ($validated->fails()) {
-            return redirect()->route('code.view', ['token' => $token])
-                ->withErrors($validated->errors())
-                ->withInput();
-        }
-        $this->verfyCaptchaCode($request->captcha, 'code.view');
+        $request->validated();
+        $this->verfyCaptchaCode($request->captcha, $token);
         $user = User::where('token_to_verify', $token)->first();
         if (!$user) {
             return redirect()->route('home')->with('error', 'Acceso no permitido.');

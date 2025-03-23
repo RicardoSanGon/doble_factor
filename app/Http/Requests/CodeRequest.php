@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CodeRequest extends FormRequest
 {
@@ -31,5 +33,17 @@ class CodeRequest extends FormRequest
             'code' => 'required|numeric|digits:6',
             'captcha' => 'required'
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        $token = $this->route('token'); // Obtiene el token desde la URL o request
+        $url = route('code.view', ['token' => $token]); // Genera la ruta correcta
+
+        throw new HttpResponseException(
+            redirect($url)
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }
