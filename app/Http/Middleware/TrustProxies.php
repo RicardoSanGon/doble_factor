@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Http\Middleware\TrustProxies as Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TrustProxies extends Middleware
 {
@@ -23,4 +25,10 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_HOST |
         Request::HEADER_X_FORWARDED_PORT |
         Request::HEADER_X_FORWARDED_PROTO;
+
+    public function handle($request, Closure $next)
+    {
+        Log::info('Encabezados Recibidos en Laravel:', $request->headers->all());
+        return $next($request);
+    }
 }
