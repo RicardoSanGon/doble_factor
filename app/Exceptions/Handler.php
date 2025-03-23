@@ -112,7 +112,7 @@ class Handler extends ExceptionHandler
             Log::error($e->getMessage());
             return redirect()->route('home')->with('error', 'Acceso no permitido.');
         }
-
+        Log::error($e->getMessage());
         return redirect()->route('home')->with('error', 'Disculpe las molestias, en este momento el sistema no esta disponible.');
     }
 }

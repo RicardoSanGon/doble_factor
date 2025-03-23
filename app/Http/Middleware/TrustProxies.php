@@ -26,9 +26,4 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_PORT |
         Request::HEADER_X_FORWARDED_PROTO;
 
-    public function handle($request, Closure $next)
-    {
-        Log::info('Encabezados Recibidos en Laravel:', $request->headers->all());
-        return $next($request);
-    }
 }
