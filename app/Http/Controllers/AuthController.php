@@ -198,6 +198,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        Log::info('Request Headers: ', request()->headers->all());
         DB::beginTransaction();
         $request->validated();
         $this->verfyCaptcha($request->captcha);
