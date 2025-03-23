@@ -154,8 +154,8 @@ class AuthController extends Controller
             Resend::emails()->send(['from' => 'noreply@ricardosg.icu', 'to' => $user->email, 'html' => $mail->render(), 'subject' => 'Verificación de correo']);
             $this->whatsapp_controller->sendMessage('Se ha dectectado un inicio de sesión en tu cuenta *' . $user->email . '* con el código de verificación: *' . $code . '*. Si no fuiste tú, por favor ignora este mensaje.');
             $user->save();
-            $cookie = cookie('code_token', $user->token_to_verify, 60 * 24);
-            return redirect()->route('code.view', ['token' => $user->token_to_verify])->cookie($cookie);
+            $cookie = cookie('code_token', $user->token_to_verify, 60);
+            return redirect()->route('code.view')->cookie($cookie);
         } else {
             throw ValidationException::withMessages([
                 'credentials' => 'Credenciales incorrectas'
