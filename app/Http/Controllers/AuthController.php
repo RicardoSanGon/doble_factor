@@ -106,9 +106,9 @@ class AuthController extends Controller
      * @param string $token
      * @return \Illuminate\View\View
      */
-    public function codeView($token)
+    public function codeView()
     {
-        return view('code', ['token' => $token, 'captcha' => captcha_img()]);
+        return view('code', ['captcha' => captcha_img()]);
     }
 
     /**
