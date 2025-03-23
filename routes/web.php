@@ -39,6 +39,5 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 //Ruta que hara el registro de usuario
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 //Ruta que enviara el código de verificación
-Route::post('/code/verify/{token}', [AuthController::class, 'verifyCode'])->name('verify.code')
-->where('token', '^[0-9a-zA-Z_]{25,}$');
+Route::post('/code/verify', [AuthController::class, 'verifyCode'])->name('verify.code');
 
