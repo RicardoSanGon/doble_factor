@@ -154,7 +154,8 @@ class AuthController extends Controller
             Resend::emails()->send(['from' => 'noreply@ricardosg.icu', 'to' => $user->email, 'html' => $mail->render(), 'subject' => 'Verificación de correo']);
             $this->whatsapp_controller->sendMessage('Se ha dectectado un inicio de sesión en tu cuenta *' . $user->email . '* con el código de verificación: *' . $code . '*. Si no fuiste tú, por favor ignora este mensaje.');
             $user->save();
-            return redirect()->route('code.view', ['token' => $user->token_to_verify]);
+            $cookie = cookie('code_token', $user->token_to_verify, 60 * 24);
+            return redirect()->route('code.view', ['token' => $user->token_to_verify])->cookie($cookie);
         } else {
             throw ValidationException::withMessages([
                 'credentials' => 'Credenciales incorrectas'
@@ -270,10 +271,13 @@ class AuthController extends Controller
      * @see JWTAuth Para la creación del token (JWT).
      * @see Hash::check() Para compara texto encriptado con texto plano.
      */
-    public function verifyCode(CodeRequest $request, $token)
+    public function verifyCode(CodeRequest $request)
     {
+        if(!$token = $request->cookie('code_token')){
+            throw new JWTException();
+        }
         $request->validated();
-        $this->verfyCaptchaCode($request->captcha, $token);
+        $this->verfyCaptcha($request->captcha, 'code.view');
         $user = User::where('token_to_verify', $token)->first();
         if (!$user) {
             return redirect()->route('home')->with('error', 'Acceso no permitido.');
@@ -365,12 +369,4 @@ class AuthController extends Controller
             return redirect()->route($route_name)->with('error', 'Captcha Invalido')->withInput();
         }
     }
-
-    function verfyCaptchaCode($captcha, $token)
-    {
-        if (!Captcha::check($captcha)) {
-            return redirect()->route('code.view', ['token' => $token])->with('error', 'Captcha Invalido')->withInput();
-        }
-    }
-
 }

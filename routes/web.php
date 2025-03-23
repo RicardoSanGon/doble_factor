@@ -29,8 +29,7 @@ Route::group(['middleware' => 'jwt'], function () {
 Route::get('/email/verify/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email')
     ->where('token', '^[0-9a-zA-Z_]{25,}$');
 //Ruta que mostrara la vista de verificación de código
-Route::get('/code/{token}', [AuthController::class, 'codeView'])->name('code.view')
-    ->where('token', '^[0-9a-zA-Z_]{25,}$');
+Route::get('/code', [AuthController::class, 'codeView'])->name('code.view');
 //Ruta que reenviara el correo de verificación
 Route::get('/resend/verification/{token}', [AuthController::class, 'resendVerification'])->name('resend.verification')
     ->where('token', '^[0-9a-zA-Z_]{25,}$');

@@ -8,6 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CodeRequest extends FormRequest
 {
+    protected $redirect = '/code';
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -33,17 +34,5 @@ class CodeRequest extends FormRequest
             'code' => 'required|numeric|digits:6',
             'captcha' => 'required'
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        $token = $this->route('token'); // Obtiene el token desde la URL o request
-        $url = route('code.view', ['token' => $token]); // Genera la ruta correcta
-
-        throw new HttpResponseException(
-            redirect($url)
-                ->withErrors($validator)
-                ->withInput()
-        );
     }
 }
