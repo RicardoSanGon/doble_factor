@@ -134,7 +134,6 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $request->validated();
-        $this->verfyCaptcha($request->captcha, 'home');
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             throw ValidationException::withMessages([
@@ -203,7 +202,6 @@ class AuthController extends Controller
         Log::info('Request Headers: ', request()->headers->all());
         DB::beginTransaction();
         $request->validated();
-        $this->verfyCaptcha($request->captcha, 'register_view');
         $token = $this->generateRandomString();
         $signed_url = URL::temporarySignedRoute(
             'verify.email',
@@ -277,7 +275,6 @@ class AuthController extends Controller
             throw new JWTException();
         }
         $request->validated();
-        $this->verfyCaptcha($request->captcha, 'code.view');
         $user = User::where('token_to_verify', $token)->first();
         if (!$user) {
             return redirect()->route('home')->with('error', 'Acceso no permitido.');
@@ -353,20 +350,4 @@ class AuthController extends Controller
         return $randomString;
     }
 
-    /**
-     * Verifica el captcha.
-     *
-     * En este metodo se verifica que el captcha ingresado por el usuario sea correcto,
-     * en caso contrario se lanza una excepción de validación.
-     *
-     * @param $captcha
-     * @return RedirectResponse
-     * @throws ValidationException
-     */
-    function verfyCaptcha($captcha, $route_name)
-    {
-        if (!Captcha::check($captcha)) {
-            return redirect()->route($route_name)->with('error', 'Captcha Invalido')->withInput();
-        }
-    }
 }
