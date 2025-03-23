@@ -199,7 +199,6 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        Log::info('Request Headers: ', request()->headers->all());
         DB::beginTransaction();
         $request->validated();
         $token = $this->generateRandomString();
@@ -290,9 +289,7 @@ class AuthController extends Controller
             $user->save();
             return redirect()->route('dashboard')->cookie($cookie);
         } else {
-            throw ValidationException::withMessages([
-                'code' => 'Código incorrecto'
-            ]);
+            return redirect()->route('code.view')->with('error', 'Código incorrecto');
         }
     }
 
