@@ -74,7 +74,7 @@ class Handler extends ExceptionHandler
          */
         if ($e instanceof ValidationException) {
             Log::error('URL anterior detectada por Laravel: ' . url()->previous());
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return back()->withErrors($e->errors())->withInput();
         }
         /**
          * Categoría: Errores de rutas
