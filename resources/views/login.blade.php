@@ -9,58 +9,58 @@
         <h1 class="text-5xl text-center">Inicio de sesión</h1>
     </header>
     <div class=" h-screen w-screen flex justify-center -z-20">
-        <form id="loginForm" onsubmit="showLoader()" method="POST" class="py-10" action="{{ route('login') }}">
-            @csrf
-            <div class="flex justify-center">
-                <img src="{{ asset('img/lock.png') }}" alt="" class="w-20 h-20">
-            </div>
-            <div class="flex justify-center">
-                <div>
-                    <input type="email"
-                           name="email"
-                           id="email"
-                           placeholder="Correo"
-                           class="w-60 h-10 mt-5 rounded-md p-3"
-                           required
-                           value="{{ old('email') }}">
+        <div class="rounded-md h-max w-80 my-28 backdrop-blur-md shadow-2xl shadow-black">
+            <form id="loginForm" onsubmit="showLoader()" method="POST" class="py-10" action="{{ route('login') }}">
+                @csrf
+                <div class="flex justify-center">
+                    <img src="{{ asset('img/lock.png') }}" alt="" class="w-20 h-20">
                 </div>
-            </div>
-            <div class="flex justify-center">
-                <div>
-                    <input type="password"
-                           name="password"
-                           id="password"
-                           placeholder="Contraseña"
-                           class="w-60 h-10 mt-5 rounded-md p-3"
-                           minlength="8"
-                           required>
+                <div class="flex justify-center">
+                    <div>
+                        <input type="email"
+                               name="email"
+                               id="email"
+                               placeholder="Correo"
+                               class="w-60 h-10 mt-5 rounded-md p-3"
+                               required
+                               value="{{ old('email') }}">
+                    </div>
                 </div>
-            </div>
-            <div class="w-max ml-auto mr-auto mt-5">
-                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-            </div>
-            <div class="flex justify-center">
-                <button type="submit" class="w-60 h-10 mt-5
+                <div class="flex justify-center">
+                    <div>
+                        <input type="password"
+                               name="password"
+                               id="password"
+                               placeholder="Contraseña"
+                               class="w-60 h-10 mt-5 rounded-md p-3"
+                               minlength="8"
+                               required>
+                    </div>
+                </div>
+                <div class="w-max ml-auto mr-auto mt-5">
+                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit" class="w-60 h-10 mt-5
                     rounded-md
                     bg-green-500
                     text-white
                     cursor-pointer
                     hover: transition duration-500 ease-in-out hover:bg-green-900">Iniciar sesión
-                </button>
-            </div>
-            <div class="flex justify-center">
-                <button type="button" onclick="window.location='{{route('register_view')}}'" class="w-60 h-10 mt-5
+                    </button>
+                </div>
+                <div class="flex justify-center">
+                    <button type="button" onclick="window.location='{{route('register_view')}}'" class="w-60 h-10 mt-5
                     rounded-md
                     bg-blue-500
                     text-white
                     cursor-pointer
                     hover: transition duration-500 ease-in-out hover:bg-blue-900">Registrarse
-                </button>
-            </div>
-        </form>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    </div>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 @endsection
 @section('scripts')
