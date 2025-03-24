@@ -67,7 +67,17 @@
             </ul>`,
         });
         @endif
+        @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: "{{session('error')}}",
+        });
+        @@endif
+
         const loader = document.getElementById('loader_view');
+
+
 
         //Mostrara una pantalla de carga
         function showLoader() {
