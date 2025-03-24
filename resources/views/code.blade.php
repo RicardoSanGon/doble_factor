@@ -73,7 +73,7 @@
             title: 'Error',
             text: "{{session('error')}}",
         });
-        @@endif
+        @endif
 
         const loader = document.getElementById('loader_view');
 
