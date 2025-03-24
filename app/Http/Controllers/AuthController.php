@@ -289,7 +289,8 @@ class AuthController extends Controller
             $user->save();
             return redirect()->route('dashboard')->cookie($cookie);
         } else {
-            return redirect()->route('code.view')->with('error', 'Código incorrecto');
+            session()->flash('error', 'Código incorrecto');
+            return redirect()->route('code.view');
         }
     }
 
