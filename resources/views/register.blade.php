@@ -83,6 +83,16 @@
 @endsection
 @section('scripts')
     <script>
+        function submitForm() {
+            e.preventDefault();
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                alert('Por favor, completa el captcha.');
+                return false;
+            }
+            return true;
+        }
+
         //Mostrar mensajes de error.
         @if(session('error'))
         Swal.fire({

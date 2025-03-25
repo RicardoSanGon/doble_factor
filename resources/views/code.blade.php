@@ -55,6 +55,17 @@
 @endsection
 @section('scripts')
     <script>
+
+        function submitForm() {
+            e.preventDefault();
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                alert('Por favor, completa el captcha.');
+                return false;
+            }
+            return true;
+        }
+
         //Mostrara los errores de validación
         @if ($errors->any())
         Swal.fire({
@@ -76,7 +87,6 @@
         @endif
 
         const loader = document.getElementById('loader_view');
-
 
 
         //Mostrara una pantalla de carga
