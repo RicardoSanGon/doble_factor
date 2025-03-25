@@ -84,18 +84,6 @@
 @endsection
 @section('scripts')
     <script>
-        document.getElementById('register_form').addEventListener('submit', function(event) {
-            const response = grecaptcha.getResponse();
-            if (response.length === 0) {
-                event.preventDefault();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Por favor, completa el captcha.',
-                });
-            }
-        });
-
         //Mostrar mensajes de error.
         @if(session('error'))
         Swal.fire({
@@ -119,14 +107,25 @@
         const loader = document.getElementById('loader_view');
         //Validar que las contraseñas coincidan antes de enviar el formulario.
         document.getElementById('register_form').addEventListener('submit', function(event) {
-            const password = document.getElementById('password').value;
-            const passwordConfirmation = document.getElementById('password_confirmation').value;
-            if (password !== passwordConfirmation) {
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
                 event.preventDefault();
-                alert('Las contraseñas no coinciden');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor, completa el captcha.',
+                });
             }
             else {
-                loader.style.display = 'flex';
+                const password = document.getElementById('password').value;
+                const passwordConfirmation = document.getElementById('password_confirmation').value;
+                if (password !== passwordConfirmation) {
+                    event.preventDefault();
+                    alert('Las contraseñas no coinciden');
+                }
+                else {
+                    loader.style.display = 'flex';
+                }
             }
         });
         //Ocultar la pantalla de carga cierto tiempo despues.

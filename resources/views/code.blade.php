@@ -10,7 +10,7 @@
     </header>
     <div class=" h-screen w-screen flex justify-center -z-20">
         <div class="rounded-md h-max w-80 my-28 backdrop-blur-md shadow-2xl shadow-black">
-            <form id="loginForm" onsubmit="showLoader()" method="POST" class="py-10"
+            <form id="loginForm" method="POST" class="py-10"
                   action="{{ route('verify.code') }}">
                 @csrf
                 <div class="flex justify-center">
@@ -65,6 +65,9 @@
                     title: 'Error',
                     text: 'Por favor, completa el captcha.',
                 });
+            }
+            else {
+                showLoader();
             }
         });
 
