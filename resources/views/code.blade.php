@@ -56,15 +56,17 @@
 @section('scripts')
     <script>
 
-        function submitForm() {
-            e.preventDefault();
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
             const response = grecaptcha.getResponse();
             if (response.length === 0) {
-                alert('Por favor, completa el captcha.');
-                return false;
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor, completa el captcha.',
+                });
             }
-            return true;
-        }
+        });
 
         //Mostrara los errores de validación
         @if ($errors->any())
